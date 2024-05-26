@@ -80,7 +80,7 @@ for subj_id = 1:subj_count
 end
 
 % Concatenate cope's into final dataset.
-ds = cosmo_stack(cope_storage(1:numel(cope_storage)));
+ds = cosmo_stack(cope_storage(1:cope_total_count));
 
 % Display Data.
 cosmo_disp(ds)
