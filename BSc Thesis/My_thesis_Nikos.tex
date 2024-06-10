@@ -1,0 +1,243 @@
+\documentclass[titlepage,openright,twoside,a4paper,10pt]{report}
+
+\usepackage[top=3.5cm, left=3cm, right=3cm, bottom=2.5cm]{geometry}
+\usepackage[unicode]{hyperref}
+\usepackage{fontspec} %if I end up using special font.
+\usepackage{csquotes} %something about multilingual quotes.
+\usepackage{siunitx}
+\usepackage{wrapfig}
+\usepackage{footnote}
+\usepackage[ruled,vlined,linesnumbered,longend]{algorithm2e} %algorithms?
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage[font={small}]{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+
+% My additions
+\usepackage[version=4]{mhchem}
+% My additions
+
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage[variant=modern]{greek}
+\setmainfont{GFS Didot}
+
+% Citations, glossaries and bookmarks.
+\usepackage[toc,nonumberlist,nopostdot,acronyms,automake]{glossaries}
+\usepackage[backend=biber,style=ieee]{biblatex} %I added the biber part.
+\usepackage{bookmark}
+
+% Color hyperlinks instead of having a box around them
+\usepackage{listings}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{tikz}
+\usepackage[labelfont=bf]{caption}
+\usepackage{float}
+
+% Maths packages
+\usepackage{amsmath, amssymb}
+\usepackage{mathtools}
+\usepackage{nicefrac}
+\usepackage{multicol}
+
+\usepackage{cleveref}
+
+% Commands
+\newcommand{\paper}[2]{#1 et al. \cite{#2}} %defines citation reference function
+\newcommand{\thetitle}{Type my title here.}
+
+% Prevent huge spaces from the twoside option
+\raggedbottom
+
+% Colors
+\definecolor{dark_grey}{HTML}{303030} %internal link color, change probably
+
+% PDF properties
+\hypersetup{
+  pdfstartview= {FitH},
+  pdfauthor   = {Nikolaos Kasapakis},
+  pdftitle    = {\thetitle},
+  pdfsubject  = {Bachelor thesis at the Department of Physics of the Aristotle University of Thessaloniki},
+  pdfkeywords = {Neuroscience},
+  colorlinks  = true, %Colours links instead of ugly boxes
+  urlcolor    = blue, %Colour for external hyperlinks
+  linkcolor   = dark_grey, %Colour of internal links
+  citecolor   = blue, %Colour of citations
+  bookmarksnumbered,
+}
+
+\addbibresource{references.bib}
+
+\title{\thetitle}
+\author{Nikolaos Kasapakis}
+\date{}
+
+\makeglossaries
+\input{glossary} % I added this before \make because it wasn't working otherwise, recheck.
+
+% Highlight draft areas
+\newcommand{\draft}[1]{{\leavevmode\color{red!90!black}#1}}
+
+% Listing style
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+\pagenumbering{roman}
+
+% Increase section depth
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\titleformat{\paragraph} [hang] {\normalfont\normalsize\bfseries} {\theparagraph} {1em} {}
+%% End of package operations
+
+%% Custom YAML highlight for the listing
+% https://tex.stackexchange.com/questions/152829/how-can-i-highlight-yaml-code-in-a-pretty-way-with-listings
+\newcommand\YAMLcolonstyle{\color{red}\ttfamily\footnotesize}
+\newcommand\YAMLkeystyle{\color{black}\ttfamily\bf\footnotesize}
+\newcommand\YAMLvaluestyle{\color{blue}\ttfamily\footnotesize}
+
+\makeatletter
+
+% here is a macro expanding to the name of the language
+% (handy if you decide to change it further down the road)
+\newcommand\language@yaml{yaml}
+
+\expandafter\expandafter\expandafter\lstdefinelanguage
+\expandafter{\language@yaml}
+{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{darkgray}\bfseries,
+  basicstyle=\YAMLkeystyle,                                 % assuming a key comes first
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\YAMLvaluestyle\ttfamily,
+  moredelim=[l][\color{orange}]{\&},
+  moredelim=[l][\color{magenta}]{*},
+  moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
+  morestring=[b]',
+  morestring=[b]",
+  literate =    {---}{{\ProcessThreeDashes}}3
+                {>}{{\textcolor{red}\textgreater}}1     
+                {|}{{\textcolor{red}\textbar}}1 
+                {\ -\ }{{\mdseries\ -\ }}3,
+}
+
+% switch to key style at EOL
+\lst@AddToHook{EveryLine}{\ifx\lst@language\language@yaml\YAMLkeystyle\fi}
+\makeatother
+
+\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
+%% End of custom YAML highlight for the listing
+
+%% Intentionally left blank message
+% https://gist.github.com/philipptempel/5220000
+\makeatletter
+    \def\cleardoublepage{\clearpage%
+        \if@twoside
+            \ifodd\c@page\else
+                \vspace*{\fill}
+                \hfill
+                \begin{center}
+                This page intentionally left blank.
+                \end{center}
+                \vspace{\fill}
+                \thispagestyle{empty}
+                \newpage
+                \if@twocolumn\hbox{}\newpage\fi
+            \fi
+        \fi
+    }
+\makeatother
+%% End Intentionally left blank message
+
+%% Fancy header settings
+\pagestyle{fancy}
+
+\fancyhf{} % Clear all header and footer
+
+% Add the page number on the header in plain style pages
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyhf[LEH,ROH]{\thepage}
+}
+
+\fancyhead[RE]{\itshape\nouppercase{\leftmark}}
+\fancyhead[LO]{\itshape\nouppercase{\rightmark}}
+\fancyhead[LE,RO]{\thepage}
+%% Fancy header settings
+
+\title{mythesis}
+\author{Nikos Kasapakis}
+\date{May 2024}
+
+\begin{document}
+
+\include{Sections/cover}
+\maketitle
+
+\cleardoublepage
+\include{Sections/abstract_en}
+
+\cleardoublepage
+\include{Sections/abstract_gr}
+
+\cleardoublepage
+\include{Sections/acknowledgements}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings
+
+% Add the sections
+\input{Sections/introduction}
+\input{Sections/category_specific}
+\input{Sections/software_architecture}
+\input{Sections/classification_results}
+\input{Sections/discussion_conclusion}
+
+% Helper sections
+\input{glossary} % Input the glossary
+
+% Print the glossary entries
+\pagebreak
+\printglossaries
+
+% Print the references
+\pagebreak
+\printbibliography[heading=bibintoc]
+
+\appendix
+\input{Appendices/algorithms.tex}
+\input{Appendices/snippets.tex}
+\input{Appendices/code.tex}
+
+\end{document}
