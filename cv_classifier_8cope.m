@@ -1,8 +1,6 @@
 % Input of this file is the output ds from any extract_ds.m file
-
-%extract_ds_8cope;
-
 home_dir = 'C:/Users/User/Desktop/HCP_WM_Datasets';
+ds = extract_ds_from(home_dir);
 
 % Read mask, apply it, remove 0s and display masked ds.
 ffa_msk = cosmo_fmri_dataset([ home_dir '/ffa_msk.nii' ]);
@@ -16,101 +14,117 @@ assert(isequal(cosmo_check_dataset(msk_ds),1))
 assert(isequal(msk_ds.sa.chunks,ds.sa.chunks))
 assert(isequal(msk_ds.sa,ds.sa))
 
-% Classification with cross validation below.
-
 % Partition different targets into different ds.
-ds_storage_targets = cell(numel(unique(msk_ds.sa.targets)),1);
+target_count = numel(unique(msk_ds.sa.targets));
+targets_ds_storage = cell(target_count,1);
 
-for target_idx = 1:numel(ds_storage_targets)
-    target_msk = msk_ds.sa.targets == target_idx;
-    ds_storage_targets{target_idx} = cosmo_slice(msk_ds,target_msk,1);
+for target_id = 1:target_count
+    target_msk = msk_ds.sa.targets == target_id;
+    targets_ds_storage{target_id} = cosmo_slice(msk_ds,target_msk,1);
 end
 
-% % OUTPUT: ds_storage_targets 4x1 cell. Each cell has 80x1 samples.
-% % Same targets, different chunks.
+% OUTPUT: targets_ds_storage 4x1 cell array.
+% Each cell has a struct with 80 x Features samples.
+% All samples have the same target, different chunks.
 
-% Partition each target_only_ds into different runs.
-fold_count = 100; %Maximum fold_count -> nchoosek(320,80)
-test_ratio = 0.25;
-test_count = 20;
-train_count = 60;
-samples_per_target = 80;
+% Partition each targets_ds into different runs.
+% Maximum possible fold_count == nchoosek(320,80)
+fold_count = 200;
+test_ratio = 0.2;
+max_fold_count = 5000;
 
-chunk_partitions_storage = cell(numel(ds_storage_targets),1); %Pre allocate 4 cells 4x1
-
-for target_idx = 1:numel(chunk_partitions_storage)
-    ds_temp = ds_storage_targets{target_idx};
-    chunk_partitions_storage{target_idx} = cosmo_independent_samples_partitioner(ds_temp, ...
+partitions_storage = cell(target_count,1);
+for target_id = 1:target_count
+    ds_temp = targets_ds_storage{target_id};
+    samples_per_target = numel(ds_temp.samples(:,1));
+    test_count = test_ratio * samples_per_target;
+    train_count = (1 - test_ratio) * samples_per_target;
+    partitions_storage{target_id} = cosmo_independent_samples_partitioner(ds_temp, ...
                                                                                 'fold_count', fold_count, ...
                                                                                 'test_ratio', test_ratio, ...
-                                                                                'max_fold_count', 1000);
-    assert(isequal(cosmo_check_partitions(chunk_partitions_storage{target_idx},ds_temp),1))
+                                                                                'max_fold_count', max_fold_count);
+    assert(isequal(cosmo_check_partitions(partitions_storage{target_id},ds_temp),1))
 end
 
-% % OUTPUT:chunk_partitions_storage 4x1 cell. Each cell has 1 structure.
-% % Each structure has:
-% % 50 .train_indices cells with 60 chunk numbers in each cell.
-% % 50 .test_indices  cells with 20 chunk numbers in each cell.
+% OUTPUT: chunk_partitions_storage 4x1 cell array.
+% Each cell has a struct with 2 attributes each.
+% Each .train_indices is a 1xfold_count cell array.
+% Each cell contains train_count numbers, indicating training chunks.
+% Each .test_indices is a 1xfold_count cell array.
+% Each cell contains test_count numbers, indicating test chunks.
 
-pred_libsvm = cell(fold_count, test_count*4); %50x80
-pred_libsvm_logical = cell(fold_count, test_count*4); %50x80 
-sep_train_ds = cell(4,1);
-sep_test_ds  = cell(4,1);
-
-% % Add balance partitions. Check partitions.
+pred_libsvm = cell(fold_count, 1);
+pred_libsvm_logical =  cell(fold_count,1);
+acc_libsvm_per_fold = zeros(fold_count,1);
+train_ds_temp = cell(4,1);
+test_ds_temp  = cell(4,1);
 
 % Performing classification for all folds.
-for partition_idx = 1:fold_count
+for fold_id = 1:fold_count
     % Slicing target_only_ test_ds and train_ds based on partitions.
-    for i=1:4
-    sep_train_ds{i} = cosmo_slice(   ds_storage_targets{i}, ...
-                                     chunk_partitions_storage{i}.train_indices{partition_idx}  );
-    sep_test_ds{i}  = cosmo_slice(   ds_storage_targets{i}, ...
-                                     chunk_partitions_storage{i}.test_indices{partition_idx}   );
+    for target_id=1:target_count
+        train_ds_temp{target_id} = cosmo_slice(  targets_ds_storage{target_id}, ...
+                                                 partitions_storage{target_id}.train_indices{fold_id} );
+        test_ds_temp{target_id}  = cosmo_slice(  targets_ds_storage{target_id}, ...
+                                                 partitions_storage{target_id}.test_indices{fold_id}  );
     end
-    % Concatenating all partitioned target_only_ds. 
-    % into one fully partitioned ds.
-    train_ds = cosmo_stack(sep_train_ds(1:4));
-    test_ds = cosmo_stack(sep_test_ds(1:4));
-    
+
+    % Concatenating into final train_ds and test_ds.
+    train_ds = cosmo_stack(train_ds_temp(1:target_count));
     train_samples = train_ds.samples;
     train_targets = train_ds.sa.targets;
+
+    test_ds = cosmo_stack(test_ds_temp(1:target_count));
     test_samples = test_ds.samples;
-
-    % Use classifier for each partition.
-    pred_libsvm{partition_idx} = cosmo_classify_libsvm(train_samples,train_targets,test_samples);
-
-    % Accuracy data.
     expected_targets = test_ds.sa.targets;
-    for i=1:80
-        if pred_libsvm{partition_idx}(i)~=expected_targets(i)
-            pred_libsvm_logical{partition_idx}(i) = 0;
-        else
-            pred_libsvm_logical{partition_idx}(i) = 1; 
-        end
-    end
+
+    % Train classifier and make predictions for each partition.
+    pred_libsvm{fold_id} = cosmo_classify_libsvm(train_samples,train_targets,test_samples);
+    pred_libsvm_logical{fold_id} = pred_libsvm{fold_id} == expected_targets;
+
+    % Accuracy Data.
+    acc_libsvm_per_fold(fold_id) = sum(pred_libsvm_logical{fold_id} / numel(pred_libsvm_logical{fold_id}));
 end
 
-% Calculate accuracy.
 
-acc_libsvm_per_partition = zeros(80,1);
-for j=1:fold_count
-    for i=1:80
-        acc_libsvm_per_partition(i) = numel(find(pred_libsvm_logical{j}(i)) / numel(pred_libsvm_logical{j}(i)));
-    end
-end
-
-%Display accuracy.
-acc_libsvm_mean = sum(acc_libsvm_per_partition(1:80)/80);
-disp([num2str((acc_libsvm_mean * 100),3) '%']);
-% fprintf('\nlibsvm classifier,with cv at %d folds, accuracy is : %d\n',fold_count,acc_libsvm_mean)
+% Display accuracy.
+acc_libsvm_mean = sum(acc_libsvm_per_fold)/fold_count;
+disp([newline newline 'Classifier lib_svm, with cross-validation at ' num2str(fold_count) ' folds,' ...
+      newline 'with a ' num2str((1-test_ratio)*100) '/' num2str(test_ratio * 100) ' train/test split,' ...
+      newline 'predicted targets with a mean accuracy of ' num2str([num2str((acc_libsvm_mean * 100),3) '%']) '.']);
 
 % Relative accuracy is based on 25% being the lowest performance.
-acc_libsvm_mean_relative = (acc_libsvm_mean/0.25);
-disp(acc_libsvm_mean_relative)
-%fprintf('\nlibsvm classifier,with cv at %d folds, relative accuracy is : %d\n',fold_count,acc_libsvm_mean_relative)
+% 4 is optimal, 1 is equivalent to random guessing.
+% Only accurate for all four target analyses.
+acc_libsvm_mean_relative = (acc_libsvm_mean/(1/target_count));
+disp([newline 'Mean relative accuracy is: ' num2str(acc_libsvm_mean_relative,3) ]);
 
-% IGNORE BELOW
-%fprintf('\nPredicted Expected\n');
-%fprintf('    %d        %d\n',pred_libsvm,expected_targets)
-%fprintf('\nlibsvm classifier accuracy: %d\n',acc_libsvm)
+max_folds = find(acc_libsvm_per_fold == max(acc_libsvm_per_fold));
+min_folds = find(acc_libsvm_per_fold == min(acc_libsvm_per_fold));
+
+if numel(max_folds) == 1 & numel(min_folds) == 1
+disp([newline 'Best performance occured at fold ' num2str(find(acc_libsvm_per_fold == max(acc_libsvm_per_fold))) ',' ...
+      ' and it was equal to: ' [num2str(max(acc_libsvm_per_fold) * 100,3) '%']    ]);
+disp([newline 'Worst performance occured at fold ' num2str(find(acc_libsvm_per_fold == min(acc_libsvm_per_fold))) ',' ...
+      ' and it was equal to: ' [num2str(min(acc_libsvm_per_fold) * 100,3) '%']    ]);
+else
+    disp([newline 'More than one folds achieved maximum or minimum accuracies.' ...
+          newline 'Check "max_folds" and "min_folds" arrays to identify them.'])
+end
+
+% Clear clutter variables.
+clutter_vars = { 'ds_temp' 'ffa_msk' 'fold_id' 'max_fold_count' 'msk_indeces' 'partitions_storage' 'samples_per_target' ...
+                 'target_id' 'target_msk' 'targets_ds_storage' 'test_ds' 'test_ds_temp' 'test_samples' 'train_ds' ...
+                 'train_ds_temp' 'train_samples' 'train_targets' };
+for flag=1:numel(clutter_vars)
+    clear(clutter_vars{flag})
+end
+clear flag; clear clutter_vars;
+
+% TO DO:
+% Include data about what the success% was from the actual human subjects.
+% Means the ceiling is not 100%, shows how successful the classifer is,
+% compared to humans. Ideally we have seperate acc for 2bk, 0bk and mean.
+
+% Include some sort of graph showing acc for every fold.
+% Maybe include a straight line denoting mean accuracy at the end.
