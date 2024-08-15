@@ -54,6 +54,10 @@ cope_total_count = 0;
 % Go through all subjects.
 chunks_count = 0;
 for subj_id = 1:subj_count
+    % Outlier Subjects
+    if (subj_id == 2) || (subj_id==20)
+            continue
+    end
     run_increment = 0;
     % Go through all chosen runs.
     for run_id = 1:run_count

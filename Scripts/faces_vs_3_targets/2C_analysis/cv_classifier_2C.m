@@ -1,6 +1,5 @@
 % Input of this file is the output ds from any extract_ds.m file
-home_dir = 'C:/Users/User/Desktop/HCP_WM_Datasets';
-ds = extract_ds_from(home_dir);
+home_dir = 'C:/Users/User/Desktop/HCP_WM_Datasets_2C';
 
 % Read mask, apply it, remove 0s and display masked ds.
 ffa_msk = cosmo_fmri_dataset([ home_dir '/ffa_msk.nii' ]);
@@ -29,7 +28,7 @@ end
 
 % Partition each targets_ds into different runs.
 % Maximum possible fold_count == nchoosek(320,80)
-fold_count = 200;
+fold_count = 50;
 test_ratio = 0.2;
 max_fold_count = 5000;
 
@@ -89,9 +88,11 @@ end
 
 % Display accuracy.
 acc_libsvm_mean = sum(acc_libsvm_per_fold)/fold_count;
+std_libsvm = std(acc_libsvm_per_fold,1);
 disp([newline newline 'Classifier lib_svm, with cross-validation at ' num2str(fold_count) ' folds,' ...
       newline 'with a ' num2str((1-test_ratio)*100) '/' num2str(test_ratio * 100) ' train/test split,' ...
-      newline 'predicted targets with a mean accuracy of ' num2str([num2str((acc_libsvm_mean * 100),3) '%']) '.']);
+      newline 'predicted targets with a mean accuracy of ' num2str([num2str((acc_libsvm_mean * 100),3) '%']) ' and a' ...
+      newline 'mean standard deviation of ' num2str([num2str((std_libsvm * 100),3) '%']) '.' ]);
 
 % Relative accuracy is based on 25% being the lowest performance.
 % 4 is optimal, 1 is equivalent to random guessing.
@@ -126,5 +127,4 @@ clear flag; clear clutter_vars;
 % Means the ceiling is not 100%, shows how successful the classifer is,
 % compared to humans. Ideally we have seperate acc for 2bk, 0bk and mean.
 
-% Include some sort of graph showing acc for every fold.
 % Maybe include a straight line denoting mean accuracy at the end.
