@@ -1,5 +1,5 @@
 \newacronym{MVPA}{MVPA}{Multi-Variate Pattern Analysis}
-\newacronym{UPA}{UPA}{Uni-Variate Pattern Analysis}
+\newacronym{UPA}{UPA}{Univariate Pattern Analysis}
 \newacronym{SVM}{SVM}{Support Vector Machine}
 \newacronym{ROI}{ROI}{Region of Interest}
 \newacronym{ROIs}{ROIs}{Regions of Interest}
@@ -23,8 +23,22 @@
 \newacronym{DZ}{DZ}{dizygotic}
 \newacronym{IQ}{IQ}{intelligence quotient}
 \newacronym{T-MEG}{T-MEG}{task-evoked MEG}
-\newacronym{EVs}{EVs}{explanatory variables}
 \newacronym{EV}{EV}{explanatory variable}
+\newacronym{COPE}{COPE}{contrast of explanatory variables}
+\newacronym{SVMs}{SVMs}{Support Vector Machines}
+\newacronym{PCA}{PCA}{Principal Component Analysis}
+\newacronym{ICA}{ICA}{Independent Component Analysis}
+\newacronym{PDF}{PDF}{probability density function}
+\newacronym{HRF}{HRF}{Hemodynamic Response Function}
+\newacronym{GLM}{GLM}{General Linear Model}
+\newacronym{NIfTI}{NIfTI}{Neuroimaging Informatics Technology Initiative}
+\newacronym{LR}{LR}{Left to Right}
+\newacronym{RL}{RL}{Right to Left}
+\newacronym{FEAT}{FEAT}{FMRIB's Expert Analysis Tool}
+\newacronym{3D MPRAGE}{3D MPRAGE}{three-dimensional magnetization-prepared rapid gradient-echo imaging}
+\newacronym{FOV}{FOV}{Field of View}
+\newacronym{BW}{BW}{Bandwidth}
+\newacronym{ES}{ES}{Echo Spacing}
 
 % fMRI Acronyms
 \newacronym{r-fMRI}{r-fMRI}{resting-state fMRI}
@@ -38,8 +52,8 @@
 % Imaging Techniques Acronyms
 \newacronym{PET}{PET}{Positron Emission Tomography}
 \newacronym{NIRS}{NIRS}{Near Infrared Spectroscopy}
-\newacronym{MEG}{MEG}{Magnetoenchephalogram}
-\newacronym{EEG}{EEG}{Electroenchephalography}
+\newacronym{MEG}{MEG}{Magnetoencephalogram}
+\newacronym{EEG}{EEG}{Electroencephalography}
 
 % Brain Anatomy Acronyms
 \newacronym{LGB}{LGB}{Lateral Geniculate Body}
@@ -61,71 +75,83 @@
 \newacronym{WashU}{WashU}{Washington University}
 \newacronym{UMinn}{UMinn}{University of Minnesota}
 \newacronym{SLU}{SLU}{Saint Louis University}
-\newacronym{NIH}{NIH}{National Institute of Health}
+\newacronym{NIH}{NIH}{National Institutes of Health}
 
 % Glossary Entries
 \newglossaryentry{V1}
 {
 	name = {V1},
-	description = {Visual area V1, the striate cortex or primary visual cortex.}
+	description = {Visual area V1, the striate cortex or primary visual cortex.\newline}
 }
 
 \newglossaryentry{V2}
 {
 	name = {V2},
-	description = {Visual area V2, or secondary visual cortex, also called prestriate cortex.}
+	description = {Visual area V2, or secondary visual cortex, also called prestriate cortex.\newline}
 }
 
 \newglossaryentry{V3}
 {
 	name = {V3},
-	description = {Visual area V3, which communicates directly with the respective dorsal and ventral subsystems of V2. It is less well-defined compared to other areas of the visual cortex.}
+	description = {Visual area V3, which communicates directly with the respective dorsal and ventral subsystems of V2. It is less well-defined compared to other areas of the visual cortex.\newline}
 }
 
 \newglossaryentry{V4}
 {
 	name = {V4},
-	description = {Visual area V4, a midtier cortical area in the ventral visual pathway.}
+	description = {Visual area V4, a mid-tier cortical area in the ventral visual pathway.\newline}
 }
 
 \newglossaryentry{blob cells}
 {
 	name = {blob cells},
-	description = {V1 cells that resemble kLGN neurons. They are monocular, color sensitive, characterized by small, concentric receptive fields and are found in clusters, hence the name.}
+	description = {V1 cells that resemble kLGN neurons. They are monocular, color sensitive, characterized by small, concentric receptive fields and are found in clusters, hence the name.\newline}
 }
 
 \newglossaryentry{interblob cells}
 {
 	name = {interblob cells},
-	description = {V1 cells, the majority of which are binocular, not color sensitive, characterized by elongated receptive fields, exhibit ocular dominance and orientation specificity, while they are found around the clusters of V1 blob cells.}
+	description = {V1 cells, the majority of which are binocular, not color sensitive, characterized by elongated receptive fields, exhibit ocular dominance and orientation specificity, while they are found around the clusters of V1 blob cells.\newline}
 }
 
 \newglossaryentry{gyromagnetic ratio}
 {
 	name = {gyromagnetic ratio},
-	description = {The gyromagnetic ratio, a constant specific to each different nucleus.}
+	description = {The gyromagnetic ratio, a constant specific to each different nucleus.\newline}
 }
 
 \newglossaryentry{TE}
 {
 	name = {Time of Echo},
-	description = {The time between the delivery of the RF pulse and the receipt of the echo signal.}
+	description = {The time between the delivery of the RF pulse and the receipt of the echo signal.\newline}
 }
 
 \newglossaryentry{TR}
 {
 	name = {TR},
-	description = {The amount of time that passes between consecutive acquired brain volumes.}
+	description = {The amount of time that passes between consecutive acquired brain volumes.\newline}
 }
 
 \newglossaryentry{flip angle}
 {
 	name = {flip angle},
-	description = {The amount or rotation that net magnetization experiences during application of a RF pulse.}
+	description = {The amount or rotation that net magnetization experiences during application of a RF pulse.\newline}
 }
 
 \newglossaryentry{connectomics}
 {
 	name = {connectomics},
-	description = {The production and study of connectomes: comprehensive maps of connections within an organism's nervous system.}
+	description = {The production and study of connectomes: comprehensive maps of connections within an organism's nervous system.\newline}
+}
+
+\newglossaryentry{2C}
+{
+	name = {2C},
+	description = {The FEAT analysis that produced 2 chunks per subject, with a total of 40 chunks.\newline}
+}
+
+\newglossaryentry{4C}
+{
+	name = {4C},
+	description = {The FEAT analysis that produced 4 chunks per subject, with a total of 80 chunks.\newline}
 }
