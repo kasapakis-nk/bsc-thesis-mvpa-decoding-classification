@@ -1,23 +1,23 @@
 % Boxplot that shows acc variance over 3000 folds.
 opts_1 = spreadsheetImportOptions('NumVariables',1);
 opts_1.Sheet = '2C_fold';
-opts_1.DataRange = 'G8:G76';
-fold_count_69_box_plot_data = readmatrix('classification_results.xlsx',opts_1);
-fold_count_69_box_plot_data = str2double(fold_count_69_box_plot_data);
+opts_1.DataRange = 'G8:G56';
+fold_count_49_box_plot_data = readmatrix('classif_res_ppa.xlsx',opts_1);
+fold_count_49_box_plot_data = str2double(fold_count_49_box_plot_data);
 
 figure;
-box_plot = boxplot(fold_count_69_box_plot_data,'Widths',0.2);
+box_plot = boxplot(fold_count_49_box_plot_data,'Widths',0.2);
 
 axis_1 = gca;
 
-axis_1.Title.String = '2C\_Accuracy Variance over 69 Folds';
+axis_1.Title.String = '2C\_Accuracy Variance - 49 Folds - PPA';
 axis_1.XLabel.String = 'Fold Count';
 axis_1.YLabel.String = 'Accuracy (%)';
 
-axis_1.YLim = [0.4,1];
+axis_1.YLim = [0.4,0.9];
 
-axis_1.YTick = linspace(0.4, 1, 7);
-axis_1.YTickLabel = {'40%' '50%' '60%' '70%' '80%' '90%' '100%'};
+axis_1.YTick = linspace(0.4, 0.9, 6);
+axis_1.YTickLabel = {'40%' '50%' '60%' '70%' '80%' '90%'};
 axis_1.XTick = 1;
 axis_1.XTickLabel = {'69'};
 
