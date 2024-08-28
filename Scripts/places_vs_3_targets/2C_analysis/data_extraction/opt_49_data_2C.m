@@ -1,6 +1,6 @@
 % Read mask, apply it, remove 0s and display masked ds.
-ffa_msk = cosmo_fmri_dataset([ home_dir '/ffa_msk.nii' ]);
-msk_indeces = find(ffa_msk.samples);
+ppa_msk = cosmo_fmri_dataset([ home_dir '/ppa_msk.nii' ]);
+msk_indeces = find(ppa_msk.samples);
 msk_ds = cosmo_slice(ds,msk_indeces,2);
 msk_ds = cosmo_remove_useless_data(msk_ds);
 
@@ -13,19 +13,15 @@ for target_id = 1:target_count
     targets_ds_storage{target_id} = cosmo_slice(msk_ds,target_msk,1);
 end
 
-% OUTPUT: targets_ds_storage 4x1 cell array.
-% Each cell has a struct with 80 x Features samples.
-% All samples have the same target, different chunks.
-
 % Partition each targets_ds into different runs.
 % Maximum possible fold_count == nchoosek(320,80)
 
-chosen_fold_count=[250,500,750,1000,1250,1500,1750,2000,2250,2500,2750,3000];
+chosen_fold_count=49; %69 for optimal, 56 for sub-optimal
 
 acc_mat = zeros(numel(chosen_fold_count),1);
 std_mat = zeros(numel(chosen_fold_count),1);
 final_mat = zeros(numel(chosen_fold_count),5);
-box_plot_accs_per_fold_count = zeros(3000,numel(chosen_fold_count));
+box_plot_accs_per_fold_count = zeros(60,numel(chosen_fold_count));
 for i = 1:numel(chosen_fold_count)
 
     tic_time = tic;
@@ -46,13 +42,6 @@ for i = 1:numel(chosen_fold_count)
             'max_fold_count', max_fold_count);
         assert(isequal(cosmo_check_partitions(partitions_storage{target_id},ds_temp),1))
     end
-
-    % OUTPUT: chunk_partitions_storage 4x1 cell array.
-    % Each cell has a struct with 2 attributes each.
-    % Each .train_indices is a 1xfold_count cell array.
-    % Each cell contains train_count numbers, indicating training chunks.
-    % Each .test_indices is a 1xfold_count cell array.
-    % Each cell contains test_count numbers, indicating test chunks.
 
     pred_libsvm = cell(fold_count, 1);
     pred_libsvm_logical =  cell(fold_count,1);
@@ -97,7 +86,7 @@ for i = 1:numel(chosen_fold_count)
     acc_mat(i,1) = acc_libsvm_mean * 100;
     std_mat(i,1) = std_libsvm * 100;
 
-    final_mat(i,1) = 18; %subj_count; %18 is including outliers.
+    final_mat(i,1) = 19; %subj_count; %19 is including 0% acc outlier.
     final_mat(i,2) = fold_count;
     final_mat(i,3) = acc_libsvm_mean;
     final_mat(i,4) = std_libsvm;
@@ -114,29 +103,7 @@ end
 acc_avg_over_analyses = (sum(final_mat(1:numel(chosen_fold_count),3)) / numel(chosen_fold_count));
 disp(['Average accuracy over ' num2str(numel(chosen_fold_count)) ' analyses was ' num2str([num2str((acc_avg_over_analyses * 100),3) '%']) '.'])
 
-%{
 
-tiledlayout(2,1)
-nexttile
-bar(acc_mat)
-title('Accuracy Mean')
-nexttile
-bar(std_mat)
-title('Standard Deviation')
-
-%}
-box_col_labels = cell(1,12);
-l = 1;
-for k = 250:250:3000
-    box_col_labels(1,l) = {['fold_count_' num2str(k)]};
-    l=l+1;
-end
-column_labels = {'subj_count' 'fold_count' 'acc_mean' 'std' 'analysis_time (s)'};
-
-writecell(box_col_labels,'classification_results.xlsx','Sheet','4C_fold_HN','Range','A16')
-writematrix(box_plot_accs_per_fold_count,'classification_results.xlsx','Sheet','4C_fold_HN','Range','A17')
-
-writecell(column_labels,'classification_results.xlsx','Sheet','4C_fold_HN','Range','A1:E1')
-writematrix(final_mat,'classification_results.xlsx','Sheet','4C_fold_HN','Range','A2')
-writematrix(acc_avg_over_analyses,'classification_results.xlsx','Sheet','4C_fold_HN','Range','G2')
-writematrix('overall_acc_mean','classification_results.xlsx','Sheet','4C_fold_HN','Range','G1')
+column_labels = {'acc_per_fold_49'};
+writematrix(box_plot_accs_per_fold_count,'classif_res_ppa.xlsx','Sheet','2C_fold','Range','G8')
+writecell(column_labels,'classif_res_ppa.xlsx','Sheet','2C_fold','Range','G7')

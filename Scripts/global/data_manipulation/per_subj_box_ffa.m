@@ -1,31 +1,30 @@
 % Boxplot that shows acc variance over 3000 folds.
 opts_1 = spreadsheetImportOptions('NumVariables',1);
-opts_1.Sheet = '4C_box_subj_count';
-opts_1.DataRange = 'G8:G75';
-fold_count_68_box_plot_data = readmatrix('classification_results.xlsx',opts_1);
-fold_count_68_box_plot_data = str2double(fold_count_68_box_plot_data);
+opts_1.Sheet = '4C_per_subj';
+opts_1.DataRange = 'B2:B21'; %'D2:D20'; %'B2:B21'; %with outliers
+per_subj_box_plot_data = readmatrix('classif_res_ffa.xlsx',opts_1);
+per_subj_box_plot_data = str2double(per_subj_box_plot_data);
 
 figure;
-box_plot = boxplot(fold_count_68_box_plot_data,'Widths',0.2);
+box_plot = boxplot(per_subj_box_plot_data,'Widths',0.2);
 
 axis_1 = gca;
-
-axis_1.Title.String = '4C\_Accuracy Variance over 68 Folds';
-axis_1.XLabel.String = 'Fold Count';
+axis_1.Title.String = '4C\_Mean\_Acc - Per Subject - FFA';
+axis_1.XLabel.String = 'Subject Count';
 axis_1.YLabel.String = 'Accuracy (%)';
 
-axis_1.YLim = [0.4,0.9];
+axis_1.YLim = [0,1];
 
-axis_1.YTick = linspace(0.4, 0.9, 6);
-axis_1.YTickLabel = {'40%' '50%' '60%' '70%' '80%' '90%'};
+axis_1.YTick = linspace(0, 1, 11);
+axis_1.YTickLabel = {'0%' '10%' '20%' '30%' '40%' '50%' '60%' '70%' '80%' '90%' '100%'};
 axis_1.XTick = 1;
-axis_1.XTickLabel = {'3000'};
+axis_1.XTickLabel = {'19'};
 
 %boxWidth = 2;
 boxes = findobj(axis_1, 'Tag', 'Box');
 
 for i = 1:length(boxes)
-    p = patch(get(boxes(i), 'XData'), get(boxes(i), 'YData'), [1, 0.5 , 0], 'FaceAlpha', 0.9);
+    p = patch(get(boxes(i), 'XData'), get(boxes(i), 'YData'), [1, 0 , 0], 'FaceAlpha', 1); %[0, 0.9 , 1]
 end
 
 medianLines = findobj(axis_1, 'Tag', 'Median');

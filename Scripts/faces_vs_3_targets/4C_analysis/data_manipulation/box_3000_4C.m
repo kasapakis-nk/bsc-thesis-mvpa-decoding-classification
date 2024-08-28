@@ -2,7 +2,7 @@
 opts_1 = spreadsheetImportOptions('NumVariables',1);
 opts_1.Sheet = '4C_fold_HN';
 opts_1.DataRange = 'L17:L3016';
-fold_count_3000_box_plot_data = readmatrix('classification_results.xlsx',opts_1);
+fold_count_3000_box_plot_data = readmatrix('classif_res_ffa.xlsx',opts_1);
 fold_count_3000_box_plot_data = str2double(fold_count_3000_box_plot_data);
 
 figure;
@@ -10,7 +10,7 @@ box_plot = boxplot(fold_count_3000_box_plot_data,'Widths',0.2);
 
 axis_1 = gca;
 
-axis_1.Title.String = '4C\_Accuracy Variance over 3000 Folds';
+axis_1.Title.String = '4C\_Accuracy Variance - 3000 Folds - FFA';
 axis_1.XLabel.String = 'Fold Count';
 axis_1.YLabel.String = 'Accuracy (%)';
 
