@@ -4156,6 +4156,18 @@
       \verb https://linkinghub.elsevier.com/retrieve/pii/S1053811911010603
       \endverb
     \endentry
+    \entry{neurosynth}{misc}{}{}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labeltitlesource}{title}
+      \field{title}{Neurosynth: (0, 0, 0)}
+      \verb{urlraw}
+      \verb https://neurosynth.org/locations/
+      \endverb
+      \verb{url}
+      \verb https://neurosynth.org/locations/
+      \endverb
+    \endentry
     \entry{cosmo1}{misc}{}{}
       \field{sortinit}{8}
       \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
@@ -4166,6 +4178,18 @@
       \endverb
       \verb{url}
       \verb https://www.cosmomvpa.org/matlab/cosmo_independent_samples_partitioner.html#cosmo-independent-samples-partitioner
+      \endverb
+    \endentry
+    \entry{ML}{misc}{}{}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labeltitlesource}{title}
+      \field{title}{Different Types of Machine Learning Models}
+      \verb{urlraw}
+      \verb https://www.enjoyalgorithms.com/blog/classification-of-machine-learning-models
+      \endverb
+      \verb{url}
+      \verb https://www.enjoyalgorithms.com/blog/classification-of-machine-learning-models
       \endverb
     \endentry
     \entry{cosmo2}{misc}{}{}

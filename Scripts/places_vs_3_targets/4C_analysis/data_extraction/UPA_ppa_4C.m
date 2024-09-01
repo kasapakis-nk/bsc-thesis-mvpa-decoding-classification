@@ -40,5 +40,7 @@ disp(targets_upa_means)
 
 % Bar plot
 bar(targets_upa_means)
+title('Average Signal Magnitude - 4C - PPA');
+ylabel('Signal Strength (a.u.)')
 labels = {'Body' 'Face' 'Place' 'Tool'};
 set(gca,'xticklabel',labels)

@@ -18,7 +18,7 @@ axis_1.YLim = [0,1];
 axis_1.YTick = linspace(0, 1, 11);
 axis_1.YTickLabel = {'0%' '10%' '20%' '30%' '40%' '50%' '60%' '70%' '80%' '90%' '100%'};
 axis_1.XTick = 1;
-axis_1.XTickLabel = {'19'};
+axis_1.XTickLabel = {'20'};
 
 %boxWidth = 2;
 boxes = findobj(axis_1, 'Tag', 'Box');

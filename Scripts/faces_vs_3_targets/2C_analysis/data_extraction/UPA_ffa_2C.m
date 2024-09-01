@@ -2,7 +2,7 @@
 home_dir = 'C:/Users/User/Desktop/HCP_WM_Datasets_2C';
 
 % Read mask, apply it, remove 0s and display masked ds.
-ffa_msk = cosmo_fmri_dataset([ home_dir '/ffa_msk.nii' ]);
+ffa_msk = cosmo_fmri_dataset([ home_dir '/ffa_msk_6.nii' ]);
 msk_indeces = find(ffa_msk.samples);
 msk_ds = cosmo_slice(ds,msk_indeces,2);
 msk_ds = cosmo_remove_useless_data(msk_ds);
@@ -40,5 +40,7 @@ disp(targets_upa_means)
 
 % Bar plot
 bar(targets_upa_means)
+title('Average Signal Magnitude - 2C - FFA R=6');
+ylabel('Signal Strength (a.u.)')
 labels = {'Body' 'Face' 'Place' 'Tool'};
 set(gca,'xticklabel',labels)
