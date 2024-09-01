@@ -19,7 +19,7 @@ subj_list = subj_list(~cellfun(@isempty,subj_list) == 1);
 
 % Outlier Subjects
 subj_list(2) = [];
-subj_list(19) = [];
+%subj_list(19) = [];
 
 selected_copes = 1:8;
 selected_runs = {'LR' 'RL'};
@@ -42,7 +42,7 @@ chunks_dict  = dictionary( 1, 1  , 5, 2 , ... %chunk 1 is LR_2bk
 % End persistent variables.
 
 
-chosen_subj_count = 1:18;
+chosen_subj_count = 1:19;
 fold_count = 68;
 
 acc_mat = zeros(numel(chosen_subj_count),1);
@@ -200,29 +200,18 @@ end
 acc_avg_over_analyses = (sum(final_mat(1:numel(chosen_subj_count),3)) / (numel(chosen_subj_count)));
 disp(['Average accuracy over ' num2str(numel(chosen_subj_count)) ' analyses was ' num2str([num2str((acc_avg_over_analyses * 100),3) '%']) '.'])
 
-%{
-
-tiledlayout(2,1)
-nexttile
-bar(acc_mat)
-title('Accuracy Mean')
-nexttile
-bar(std_mat)
-title('Standard Deviation')
-
-%}
-
+% Data Storage
 column_labels = {'subj_count' 'fold_count' 'acc_mean' 'std' 'analysis_time (s)'};
 
-subj_count_col_labels = cell(1,18);
-for k = 1:18
+subj_count_col_labels = cell(1,19);
+for k = 1:19
     subj_count_col_labels(1,k) = {['sub_count_' num2str(k)]};
 end
 
-writecell(subj_count_col_labels,'classification_results.xlsx','Sheet','4C_box_subj_count','Range','A1')
-writematrix(box_plot_accs_per_subj_count,'classification_results.xlsx','Sheet','4C_box_subj_count','Range','A2')
+writecell(subj_count_col_labels,'classif_res_ffa.xlsx','Sheet','4C_box_subj_count','Range','A1')
+writematrix(box_plot_accs_per_subj_count,'classif_res_ffa.xlsx','Sheet','4C_box_subj_count','Range','A2')
 
-writecell(column_labels,'classification_results.xlsx','Sheet','4C_subj_count','Range','A1:E1')
-writematrix(final_mat,'classification_results.xlsx','Sheet','4C_subj_count','Range','A2')
-writematrix(acc_avg_over_analyses,'classification_results.xlsx','Sheet','4C_subj_count','Range','G2')
-writematrix('overall_acc_mean_1_to_18','classification_results.xlsx','Sheet','4C_subj_count','Range','G1')
+writecell(column_labels,'classif_res_ffa.xlsx','Sheet','4C_subj_count','Range','A1:E1')
+writematrix(final_mat,'classif_res_ffa.xlsx','Sheet','4C_subj_count','Range','A2')
+writematrix(acc_avg_over_analyses,'classif_res_ffa.xlsx','Sheet','4C_subj_count','Range','G2')
+writematrix('overall_acc_mean_1_to_19','classif_res_ffa.xlsx','Sheet','4C_subj_count','Range','G1')

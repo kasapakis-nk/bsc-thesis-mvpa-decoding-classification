@@ -1,5 +1,5 @@
-% NULL Hypothesis: The means of 2C and 4C, across different 3000 folds, 
-% differ significantly.
+% NULL Hypothesis: 
+% The means of 2C and 4C accuracies, across 3000 folds, for the ffa, DO NOT DIFFER significantly.
 
 % 4C fold data
 opts_1 = spreadsheetImportOptions('NumVariables',1);
@@ -21,22 +21,31 @@ fold_data = [fold_data_4C,fold_data_2C];
 normplot(fold_data_4C);
 normplot(fold_data_2C);
 
+% NULL Hypothesis (Normality):
+% The data does NOT come from a normal distribution. 1=NOT 0=DOES
+
+% Shapiro - Wilk test for normality is not built-in to matlab.
+% [h1, p1] = swtest(fold_data_4C);
+
+% Lilliefors test for normality of data.
+[h_4C_lil, p_4C_lil] = lillietest(fold_data_4C); % h=1 means NOT NORMAL.
+[h_2C_lil, p_2C_lil] = lillietest(fold_data_2C);
+
 % Jarque - Bera test for normality of data.
-norm_4C = jbtest(fold_data_4C); % 4C data does come from normal dist.
-norm_2C = jbtest(fold_data_2C); % 2C data does not come from normal dist.
+[h_4C, p_4C] = jbtest(fold_data_4C); % h=1 means NOT NORMAL.
+[h_2C, p_2C] = jbtest(fold_data_2C); % h=0 means it COULD be normal.
 
 % Variance test
-var_test = vartest2(fold_data_2C,fold_data_4C); % Result is NO, they don't have same variance.
+% NULL Hypothesis (Variance):
+% There IS NOT a significant diff between the variances of the two samples.
+[h_var, p_var, ci_var, stats_var] = vartest2(fold_data_2C,fold_data_4C);
+% h=1 means YES DIFFERENT % h=0 means NOT DIFFERENT
 
-% Non-parametric Kruskal-Wallis test for p value about:
-% "statistical significance of difference between the mean values of the
-% two distributions of data for 2C, 4C"
-p = kruskalwallis(fold_data);
+% Mean Difference Mann-Whitney U Test (Wilcoxon Rank-Sum Test)
+% NULL Hypothesis (Mean Difference):
+% The two distributions DO NOT differ.
+[p_mean, h_mean, stats_mean] = ranksum(fold_data_2C,fold_data_4C);
+% h=1 means YES DIFFERENT % h=0 means NOT DIFFERENT
 
-%{
-% t-value calculation
-mean_diff = ((sum(fold_data(:,2))/size(fold_data,1)) - (sum(fold_data(:,1))/size(fold_data,1)));
-denom = sqrt(((std(fold_data(:,2))^2)/size(fold_data,1)) + ((std(fold_data(:,1))^2)/size(fold_data,1)));
-t_value = mean_diff / denom;
-disp(['t value is: ' num2str(t_value)])
-%}
+
+% Kruskal-Wallis test is for more than 2 data sets.

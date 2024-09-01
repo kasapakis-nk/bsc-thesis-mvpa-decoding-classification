@@ -19,7 +19,7 @@ axis_1.YLim = [0.4,0.9];
 axis_1.YTick = linspace(0.4, 0.9, 6);
 axis_1.YTickLabel = {'40%' '50%' '60%' '70%' '80%' '90%'};
 axis_1.XTick = 1;
-axis_1.XTickLabel = {'3000'};
+axis_1.XTickLabel = {'68'};
 
 %boxWidth = 2;
 boxes = findobj(axis_1, 'Tag', 'Box');
