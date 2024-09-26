@@ -1,0 +1,91 @@
+% \documentclass[aspectratio=169]{beamer}
+\documentclass{beamer}
+\usefonttheme{structurebold}
+
+
+% \bibliographystyle{amsalpha}
+% \bibliography{references.bib}
+
+\definecolor{primary_color}{HTML}{001524}
+\definecolor{primary_color_inverse}{HTML}{ffeadb}
+\definecolor{secondary_color}{HTML}{2b4162}
+\definecolor{accent_color}{HTML}{fa9f42}
+
+\mode<presentation> {
+\usetheme{Madrid}
+
+\setbeamercolor*{palette primary}{bg = primary_color, fg = primary_color_inverse}
+\setbeamercolor*{palette secondary}{bg = secondary_color, fg = primary_color_inverse}
+\setbeamercolor*{palette tertiary}{bg = primary_color, fg = primary_color_inverse}
+\setbeamercolor{section in toc}{fg=primary_color,bg=white}
+\setbeamercolor{normal text}{fg=primary_color}
+\setbeamercolor{section number projected}{bg=accent_color,fg=primary_color}
+\setbeamercolor{subsection number projected}{bg=primary_color,fg=primary_color}
+\setbeamercolor{itemize item}{fg=primary_color}
+\setbeamercolor{caption name}{fg=primary_color}
+\setbeamertemplate{itemize item}[square]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{subsection number projected}[circle]
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\setbeamertemplate{caption}[numbered]
+\setbeamercovered{transparent}
+}
+
+\AtBeginSubsection[]
+{
+    \begin{frame}
+        \frametitle{Table of Contents}
+        \tableofcontents[currentsection,currentsubsection]
+    \end{frame}
+}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[style=ieee]{biblatex}
+
+% Maths packages
+\usepackage{amsmath, amssymb}
+\usepackage{mathtools}
+\usepackage{nicefrac}
+
+\addbibresource{../references.bib}
+
+% Title Page
+\title[MVPA Decoding - Thesis Presentation]{\large Decoding and Classification of Category-Specific Visual Stimuli in the Fusiform Gyrus Using fMRI Data and Machine Learning}
+
+\author{Kasapakis Nikolaos}
+%\author[Supervisor]{Prof. Theodoros Samaras}
+\institute[AUTh]
+{
+    Department of Physics\\
+    Aristotle University of Thessaloniki \\
+    \medskip
+    \href{mailto:nkasapak@auth.gr}{\textit{nkasapak@auth.gr}}
+}
+\titlegraphic{\includegraphics[width=2cm]{../assets/logo/AUTh_Logo.pdf}
+}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+    \tableofcontents[pausesections]
+\end{frame}
+
+% Slides
+\input{Slides/introduction}
+\input{Slides/background}
+\input{Slides/data}
+\input{Slides/results}
+%\input{Slides/future_work}
+\input{Slides/license}
+\input{Slides/thank_you}
+
+\end{document} 

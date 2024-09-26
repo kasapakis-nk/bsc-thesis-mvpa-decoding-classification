@@ -75,7 +75,7 @@ At first glance, a samples-by-features matrix might seem to represent a two-dime
 % Introduction to COPEs.
 Apart from technical decisions in data processing, the two main levers that can be manipulated are: 1) determining how many of the total \gls{EV}s provided by the experiment design to include in the analysis and whether some variables can be grouped together based on the desired effect; and 2) establishing the correlation between these \gls{EV}s.
 
-\subsection{Univariate Pattern Analysis}
+\subsection{Univariate Pattern Analysis \textit{(UPA)}}
 
 \gls{UPA} is a statistical approach used in neuroimaging to analyse brain activity data, particularly focusing on individual voxels. This method examines each voxel independently, assessing how its activity varies in response to different experimental conditions. Technically, \gls{UPA} measures the magnitude of an \gls{EV} correlation paradigm, otherwise known as the \gls{COPE} in each voxel independently. While \gls{UPA} can calculate the mean and standard deviation of the activation pattern for each voxel, either across varying conditions or over time, it does not provide information about the overall distribution behavior or the joint probability and correlations between voxels.
 
@@ -95,7 +95,7 @@ More specifically, \gls{MVPA} examines the entire spatial pattern of voxel activ
 \begin{figure}[htbp]
     \centering
     \includegraphics[width = 0.75\textwidth]{assets/images/Uni_vs_Multi.png}
-    \caption[Illustration of the difference between MVPA and UPA]{Description of the difference between \gls{UPA} and \gls{MVPA}. On the left, there is no correlation between the three variables plotted, while on the right one can see a major source of variance indicating a positive correlation between all three voxels. A \gls{UPA} that just considered mean values on a voxel-to-voxel basis could not tell any difference between these two scenarios. In contrast, \gls{MVPA} identifies the sources of variance indicated by the red arrow before proceeding to construct neural activation patterns from these sources. Adapted from \paper{Habeck}{Habeck2010}.}
+    \caption[Illustration of the Difference Between MVPA and UPA]{Description of the difference between \gls{UPA} and \gls{MVPA}. On the left, there is no correlation between the three variables plotted, while on the right one can see a major source of variance indicating a positive correlation between all three voxels. A \gls{UPA} that just considered mean values on a voxel-to-voxel basis could not tell any difference between these two scenarios. In contrast, \gls{MVPA} identifies the sources of variance indicated by the red arrow before proceeding to construct neural activation patterns from these sources. Adapted from \paper{Habeck}{Habeck2010}.}
     \label{fig:UvsM}
 \end{figure}
 
@@ -143,7 +143,7 @@ Now the time series is ready for model fitting. To achieve this, an assumption h
  	\label{fig:HRFs}
 \end{figure}
 
-Constructing a \gls{GLM} to fit the data involves estimating the expected \gls{BOLD} response by calculating the ideal beta weights for each regressor (\gls{EV}s). The model is then fitted to the time-series at each voxel, producing a function known as the fitted time-series, as shown in Figure \autoref{fig:fitted_HRF}.
+Constructing a \gls{GLM} to fit the data involves estimating the expected \gls{BOLD} response by calculating the ideal beta weights for each regressor (\gls{EV}s). The model is then fitted to the time-series at each voxel, producing a function known as the fitted time-series, as shown in Figure \autoref{fig:fitted_TS}.
 
 \begin{figure}[htbp]
     \centering
