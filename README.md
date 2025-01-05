@@ -11,8 +11,7 @@
 </p>
 
 <p align="center">
-  <h3 align="center">Decoding and Classification of Category‐Specific Visual Stimuli 
-    in the Fusiform Gyrus Using fMRI Data and Machine Learning</h3>
+  <h3 align="center">Decoding and Classification of Category‐Specific Visual Stimuli<br>in the Fusiform Gyrus Using fMRI Data and Machine Learning</h3>
 </p>
 <br>
 <br>
